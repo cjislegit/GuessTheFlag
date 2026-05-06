@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
     @State private var score = 0
+    @State private var round = 1
+    @State private var gameOver = false
     
     var body: some View {
         ZStack {
@@ -68,13 +70,20 @@ struct ContentView: View {
         } message: {
             Text("Your score is \(score)")
         }
+        
+        .alert("Game Over", isPresented: $gameOver) {
+            Button("Play Again?", action: restart)
+        } message: {
+            Text("Your final score is \(score)")
+        }
     }
     
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "Correct"
+            score += 1
         } else {
-            scoreTitle = "Wrong"
+            scoreTitle = "Wrong that is the flag of \(countries[number])"
         }
         showingScore = true
     }
@@ -82,6 +91,17 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        round += 1
+        
+        if round == 9 {
+            gameOver = true
+        }
+    }
+    
+    func restart() {
+        score = 0
+        round = 1
+        askQuestion()
     }
 }
 
