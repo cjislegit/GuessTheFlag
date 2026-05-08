@@ -21,6 +21,16 @@ extension View {
     }
 }
 
+struct FlagImage: View {
+    var flagName: String
+    
+    var body: some View {
+        Image(flagName)
+            .clipShape(.capsule)
+            .shadow(radius: 5)
+    }
+}
+
 struct ContentView: View {
     @State var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Spain", "UK","Ukraine", "US"].shuffled()
     @State var correctAnswer = Int.random(in: 0...2)
@@ -30,16 +40,6 @@ struct ContentView: View {
     @State private var score = 0
     @State private var round = 1
     @State private var gameOver = false
-    
-    struct FlagImage: View {
-        var flagName: String
-        
-        var body: some View {
-            Image(flagName)
-                .clipShape(.capsule)
-                .shadow(radius: 5)
-        }
-    }
     
     var body: some View {
         ZStack {
