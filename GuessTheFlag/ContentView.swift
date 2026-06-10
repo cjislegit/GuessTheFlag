@@ -40,6 +40,8 @@ struct ContentView: View {
     @State private var score = 0
     @State private var round = 1
     @State private var gameOver = false
+    @State private var animationAmount = 0.0
+    @State private var clickedFlag: Int? = nil
     
     var body: some View {
         ZStack {
@@ -64,10 +66,17 @@ struct ContentView: View {
                     
                     ForEach(0..<3) { number in
                         Button {
+                            clickedFlag = number
                             flagTapped(number)
+                            withAnimation {animationAmount += 360}
                         } label: {
                             FlagImage(flagName: countries[number])
                         }
+                        .rotation3DEffect(
+                            .degrees(clickedFlag == number ? animationAmount : 0),
+                            axis: (x: 0, y: 1, z:0))
+                            .opacity(clickedFlag == nil || clickedFlag == number ? 1 : 0.25)
+                    
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -112,6 +121,7 @@ struct ContentView: View {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         round += 1
+        clickedFlag = nil
         
         if round == 9 {
             gameOver = true
